@@ -6,7 +6,7 @@
       <img src="https://img.shields.io/npm/v/matchr.svg" alt="npm version">
     </a>
     <a href="https://travis-ci.org/Moeriki/node-matchr">
-      <img src="https://travis-ci.org/Moeriki/node-matchr?branch=master" alt="Build Status"></img>
+      <img src="https://travis-ci.org/Moeriki/node-matchr.svg?branch=master" alt="Build Status"></img>
     </a>
     <a href="https://coveralls.io/github/Moeriki/node-matchr?branch=master">
       <img src="https://coveralls.io/repos/github/Moeriki/node-matchr/badge.svg?branch=master" alt="Coverage Status"></img>
