@@ -1,12 +1,14 @@
 {
   "name": "matchr",
   "version": "1.0.0",
-  "description": "JavaScript matching",
+  "description": "Powerful JavaScript value matching.",
   "keywords": [
-    "functional",
     "matcher",
+    "array",
+    "date",
     "object",
-    "date"
+    "regex",
+    "type"
   ],
   "author": "Dieter Luypaert <dieterluypaert@gmail.com>",
   "license": "MIT",

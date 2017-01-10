@@ -1,6 +1,6 @@
 <p align="center">
   <h3 align="center">matchr</h3>
-  <p align="center">JavaScript deep partial arrays and object matching.<p>
+  <p align="center">Powerful JavaScript value matching.<p>
   <p align="center">
     <a href="https://www.npmjs.com/package/matchr">
       <img src="https://img.shields.io/npm/v/matchr.svg" alt="npm version">
