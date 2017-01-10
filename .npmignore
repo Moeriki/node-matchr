@@ -1,0 +1,6 @@
+.eslintrc.js
+.gitignore
+.npmignore
+coverage
+node_modules
+__tests__/
