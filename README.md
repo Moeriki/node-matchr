@@ -75,6 +75,17 @@ const isNumber = (n) => typeof n === 'number';
 matchr(42, isNumber); // true
 ```
 
+### Type matching
+
+```javascript
+matchr([], Array); // true
+matchr(true, Boolean); // true
+matchr(false, Boolean); // true
+matchr(() => {}, Function); // true
+matchr({}, Object); // true
+matchr('Hello World!', String); // true
+```
+
 ### Deep matching
 
 ```javascript
@@ -85,15 +96,18 @@ matchr([{ a: 1 }, { b: 2 }], [{ a: 1 }]); // true
 matchr([{ a: 1 }, { b: 2 }], [{ a: 1 }]); // true
 ```
 
-Deep matching uses `matchr` recursively internally to match property values.
+Deep matching uses `matchr` recursively to match property values.
 
 ```javascript
 matchr({
 	name: 'John',
-	age: 40
+	age: 40,
+	gender: 'm',
+	hasBand: true
 }, {
-	name: /oh/,
-	age: isNumber
+	name: String,
+	age: Number,
+	gender: /f|m/
 }); // true
 ```
 
@@ -106,7 +120,7 @@ const matches = require('matchr/matches');
 
 // matches(expected)(actual)
 
-const matcher = matches({ a: isNumber });
+const matcher = matches({ a: Number });
 
 matcher({ a: 1, b: 2 }); // true
 ```

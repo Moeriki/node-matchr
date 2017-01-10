@@ -6,7 +6,16 @@ const isPlainObject = require('lodash.isplainobject');
 
 // constants
 
-// const NATIVE_CONSTRUCTORS = [Array, Boolean, Function, Number, Object, RegExp, String, Symbol];
+const NATIVE_CONSTRUCTORS = [
+  { Type: Array, detect: Array.isArray },
+  { Type: Boolean, detect: (bool) => typeof bool === 'boolean' },
+  { Type: Function, detect: (func) => typeof func === 'function' },
+  { Type: Number, detect: (numb) => typeof numb === 'number' },
+  { Type: Object, detect: (obj) => obj !== null && !Array.isArray(obj) && !(obj instanceof RegExp) && typeof obj === 'object' },
+  { Type: RegExp, detect: (regexp) => regexp instanceof RegExp },
+  { Type: String, detect: (str) => typeof str === 'string' },
+  { Type: Symbol, detect: (symb) => typeof symb === 'symbol' },
+];
 
 // private functions
 
@@ -42,6 +51,11 @@ function parseDate(dateLike) {
 function matchr(actual, matcher) {
   // If the matcher is a function, execute it
   if (typeof matcher === 'function') {
+    // Match native constructors by type
+    const nativeConstructor = NATIVE_CONSTRUCTORS.find((nativeConstructor) => nativeConstructor.Type === matcher);
+    if (nativeConstructor) {
+      return nativeConstructor.detect(actual);
+    }
     return matcher(actual);
   }
 
@@ -64,12 +78,6 @@ function matchr(actual, matcher) {
   if (actual == null || matcher == null) {
     return false;
   }
-
-  // Match native constructors by type
-  // const nativeConstructor = NATIVE_CONSTRUCTORS.find(matcher);
-  // if (nativeConstructor) {
-  //   return nativeConstructor(actual) === actual;
-  // }
 
   // Values of different types never match.
   if (typeof actual !== typeof matcher) {

@@ -47,6 +47,27 @@ it('should handle undefined and null values', () => {
   expect(matchr(/u/, null)).toBe(false);
 });
 
+it('should match primitive types', () => {
+  const expectType = (value, type) => {
+    expect(matchr(value, Array)).toBe(type === Array);
+    expect(matchr(value, Boolean)).toBe(type === Boolean);
+    expect(matchr(value, Function)).toBe(type === Function);
+    expect(matchr(value, Number)).toBe(type === Number);
+    expect(matchr(value, Object)).toBe(type === Object);
+    expect(matchr(value, RegExp)).toBe(type === RegExp);
+    expect(matchr(value, String)).toBe(type === String);
+    expect(matchr(value, Symbol)).toBe(type === Symbol);
+  };
+  // expectType([], Array);
+  expectType(true, Boolean);
+  expectType(() => { /**/ }, Function);
+  expectType(3, Number);
+  expectType({}, Object);
+  expectType(/ /, RegExp);
+  expectType(' ', String);
+  expectType(Symbol(''), Symbol);
+});
+
 // regex
 
 it('should execute regular expressions', () => {
