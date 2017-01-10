@@ -45,6 +45,17 @@ it('should handle undefined and null values', () => {
   expect(/u/).not.toMatchr(null);
 });
 
+it('should match primitive types', () => {
+  expect([]).toMatchr(Array);
+  expect(true).toMatchr(Boolean);
+  expect(() => { /**/ }).toMatchr(Function);
+  expect(3).toMatchr(Number);
+  expect({}).toMatchr(Object);
+  expect(/ /).toMatchr(RegExp);
+  expect(' ').toMatchr(String);
+  expect(Symbol('')).toMatchr(Symbol);
+});
+
 // regex
 
 it('should execute regular expressions', () => {

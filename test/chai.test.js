@@ -50,6 +50,17 @@ it('should handle undefined and null values', () => {
   expect(/u/).not.to.matchr(null);
 });
 
+it('should match primitive types', () => {
+  expect([]).to.matchr(Array);
+  expect(true).to.matchr(Boolean);
+  expect(() => { /**/ }).to.matchr(Function);
+  expect(3).to.matchr(Number);
+  expect({}).to.matchr(Object);
+  expect(/ /).to.matchr(RegExp);
+  expect(' ').to.matchr(String);
+  expect(Symbol('')).to.matchr(Symbol);
+});
+
 // regex
 
 it('should execute regular expressions', () => {

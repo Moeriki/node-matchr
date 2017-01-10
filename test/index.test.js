@@ -56,7 +56,7 @@ it('should match primitive types', () => {
     expect(matchr(value, String)).toBe(type === String);
     expect(matchr(value, Symbol)).toBe(type === Symbol);
   };
-  // expectType([], Array);
+  expectType([], Array);
   expectType(true, Boolean);
   expectType(() => { /**/ }, Function);
   expectType(3, Number);

@@ -45,6 +45,27 @@ it('should handle undefined and null values', () => {
   expect(matches(undefined)(undefined)).toBe(true);
 });
 
+it('should match primitive types', () => {
+  const expectType = (value, type) => {
+    expect(matches(Array)(value)).toBe(type === Array);
+    expect(matches(Boolean)(value)).toBe(type === Boolean);
+    expect(matches(Function)(value)).toBe(type === Function);
+    expect(matches(Number)(value)).toBe(type === Number);
+    expect(matches(Object)(value)).toBe(type === Object);
+    expect(matches(RegExp)(value)).toBe(type === RegExp);
+    expect(matches(String)(value)).toBe(type === String);
+    expect(matches(Symbol)(value)).toBe(type === Symbol);
+  };
+  expectType([], Array);
+  expectType(true, Boolean);
+  expectType(() => { /**/ }, Function);
+  expectType(3, Number);
+  expectType({}, Object);
+  expectType(/ /, RegExp);
+  expectType(' ', String);
+  expectType(Symbol(''), Symbol);
+});
+
 // regex
 
 it('should execute regular expressions', () => {
