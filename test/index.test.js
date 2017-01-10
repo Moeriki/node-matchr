@@ -4,8 +4,6 @@
 
 // modules
 
-const moment = require('moment');
-
 const matchr = require('../index'); // matchr(actual, expected)
 
 // primitives

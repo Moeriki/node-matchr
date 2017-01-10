@@ -1,9 +1,5 @@
 'use strict';
 
-// modules
-
-const isPlainObject = require('lodash.isplainobject');
-
 // constants
 
 const NATIVE_CONSTRUCTORS = [
