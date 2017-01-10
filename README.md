@@ -28,6 +28,7 @@ $ npm install matchr
 
 ```javascript
 const matchr = require('matchr');
+
 // matchr(actual, expected);
 ```
 
@@ -82,6 +83,7 @@ matchr([], Array); // true
 matchr(true, Boolean); // true
 matchr(false, Boolean); // true
 matchr(() => {}, Function); // true
+matchr(42, Number); // true
 matchr({}, Object); // true
 matchr('Hello World!', String); // true
 ```
@@ -89,14 +91,18 @@ matchr('Hello World!', String); // true
 ### Deep matching
 
 ```javascript
-matchr({ person: { name: 'John' } }, { person: { name: /oh/ } }); // true
+matchr(
+	[{ a: 1 }, { b: 2 }, { c: 3 }],
+	[{ a: 1 }]
+); // true
 
-matchr([{ a: 1 }, { b: 2 }], [{ a: 1 }]); // true
-
-matchr([{ a: 1 }, { b: 2 }], [{ a: 1 }]); // true
+matchr(
+	[{ a: 1 }, { b: 2 }, { c: 3 }],
+	[{ c: 3 }, { a: 1 }]
+); // true
 ```
 
-Deep matching uses `matchr` recursively to match property values.
+Deep matching uses `matchr` recursively to match array and property values.
 
 ```javascript
 matchr({
@@ -109,6 +115,11 @@ matchr({
 	age: Number,
 	gender: /f|m/
 }); // true
+
+matchr(
+	[1, { a: 1, b: 1 }, 'John', true],
+	[/oh/, { a: Number }, Number]
+); // true
 ```
 
 ### FP support
@@ -120,9 +131,9 @@ const matches = require('matchr/matches');
 
 // matches(expected)(actual)
 
-const matcher = matches({ a: Number });
+const hasANumber = matches({ a: Number });
 
-matcher({ a: 1, b: 2 }); // true
+hasANumber({ a: 1, b: 2 }); // true
 ```
 
 ### Chai plugin
