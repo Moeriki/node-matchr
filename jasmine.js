@@ -1,22 +1,29 @@
-/* eslint-env jasmine */
-
 'use strict';
 
 // modules
 
-const utils = require('./utils');
+const pretty = require('pretty-format');
+
 const matchr = require('./index');
 
 // private functions
 
-function toMatchr(value, pattern, options) {
-  const pass = matchr(value, pattern, options);
-  const message = () => `expected ${utils.pretty(value)} ${pass ? 'not ' : ''}to match ${utils.pretty(pattern)}`;
-  return { message, pass };
+function Matches(pattern) {
+  this.pattern = pattern;
 }
 
-// extend jest
+Matches.prototype.asymmetricMatch = function asymmetricMatch(actual) {
+  return matchr(actual, this.pattern);
+};
 
-expect.extend({ toMatchr });
+Matches.prototype.jasmineToString = function jasmineToString() {
+  return `<matchr(${pretty(this.pattern)})>`;
+};
 
-module.exports = matchr;
+// exports
+
+function matches(matcher) {
+  return new Matches(matcher);
+}
+
+module.exports = matches;

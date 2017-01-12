@@ -25,6 +25,7 @@
     "prepush": "npm test"
   },
   "dependencies": {
+    "pretty-format": "~18.1.0",
     "stringify-object": "~3.1.0"
   },
   "devDependencies": {

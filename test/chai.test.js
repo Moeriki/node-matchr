@@ -11,12 +11,6 @@ chai.use(matchr);
 
 const expect = chai.expect; // expect(value).to.matchr(pattern)
 
-// config
-
-it('should have access to config', () => {
-  expect(matchr).to.have.property('setDefaultOptions').that.is.a('function');
-});
-
 // primitives
 
 it('should match primitives', () => {
@@ -195,7 +189,34 @@ it('should configure options', () => {
 it('should match with custom functions', () => {
   const isOne = (value) => value === 1;
   expect(1).to.matchr(isOne);
-  expect(2).to.not.matchr(isOne);
-  expect({ one: 1 }).to.matchr({ one: isOne });
-  expect([1]).to.matchr([isOne]);
+  expect(2).not.to.matchr(isOne);
+  expect({ one: 1, two: 2 }).to.matchr({ one: isOne });
+  expect({ one: 1, two: 2 }).not.to.matchr({ two: isOne });
+  expect([1, 2]).to.matchr([isOne]);
+  expect([2, 3]).not.to.matchr([isOne]);
+});
+
+// reject
+
+it('should have reject message', () => {
+  expect(
+    () => expect(1).to.matchr(2)
+  ).to.throw('Expected 1 to match 2');
+  expect(
+    () => expect(1).not.to.matchr(1)
+  ).to.throw('Expected 1 to not match 1');
+  expect(
+    () => expect({ a: 1 }).to.matchr({ b: 2 })
+  ).to.throw(`Expected Object {
+  "a": 1,
+} to match Object {
+  "b": 2,
+}`);
+  expect(
+    () => expect({ a: 1 }).not.to.matchr({ a: 1 })
+  ).to.throw(`Expected Object {
+  "a": 1,
+} to not match Object {
+  "a": 1,
+}`);
 });

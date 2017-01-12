@@ -31,8 +31,8 @@ const matchr = require('matchr');
 
 ### Basics
 
-```js
-// matchr(value, pattern)
+```javascript
+// matchr(actual, pattern)
 
 matchr({ a: 1, b: 2 }, { a: 1 }); // true
 
@@ -166,12 +166,16 @@ chai.expect({ a: 1, b: 2 }).to.not.matchr({ c: 3 });
 
 Plug `matchr` into jasmine / jest.
 
-```js
+```javascript
 const matchr = require('matchr/jasmine');
 
-// matchr.setDefaultOptions({});
+expect({ a: 1, b: 2 }).toEqual(matchr({ a: 1 }));
+expect({ a: 1, b: 2 }).toEqual(matchr({ a: 1, b: 2 }, { matchPartialObjects: false }));
+expect({ a: 1, b: 2 }).not.toEqual(matchr({ c: 3 }));
+```
 
-expect({ a: 1, b: 2 }).toMatchr({ a: 1 });
-expect({ a: 1, b: 2 }).toMatchr({ a: 1, b: 2 }, { matchPartialObjects: false });
-expect({ a: 1, b: 2 }).not.toMatchr({ c: 3 });
+```javascript
+const func = jest.fn();
+func('test');
+expect(func).toHaveBeenCalledWith(matchr(/es/));
 ```

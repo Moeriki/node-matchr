@@ -4,7 +4,8 @@
 
 // modules
 
-const utils = require('./utils');
+const pretty = require('pretty-format');
+
 const matchr = require('./index');
 
 // exports
@@ -20,7 +21,7 @@ function chaiMatchrPlugin(chai, chaiUtils) {
     const negate = Boolean(flag(this, 'negate'));
     assert(
       matchr(value, pattern, options) !== negate,
-      `expected ${utils.pretty(value)} ${negate ? 'not ' : ''}to match ${utils.pretty(pattern)}`
+      `Expected ${pretty(value)} to ${negate ? 'not ' : ''}match ${pretty(pattern)}`
     );
   });
 }
