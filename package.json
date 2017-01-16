@@ -24,16 +24,6 @@
     "precommit": "lint-staged",
     "prepush": "npm test"
   },
-  "jest": {
-    "collectCoverageFrom": [
-      "*.js"
-    ],
-    "testEnvironment": "node",
-    "testRegex": "/test/.*\\.test\\.js$"
-  },
-  "lint-staged": {
-    "*.js": "eslint"
-  },
   "dependencies": {
     "stringify-object": "~3.1.0"
   },
@@ -48,5 +38,15 @@
     "husky": "^0.12.0",
     "jest-cli": "~18.1.0",
     "lint-staged": "~3.2.5"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "*.js"
+    ],
+    "testEnvironment": "node",
+    "testRegex": "/test/.*\\.test\\.js$"
+  },
+  "lint-staged": {
+    "*.js": "eslint"
   }
 }
