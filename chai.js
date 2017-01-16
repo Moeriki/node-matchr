@@ -25,4 +25,6 @@ function chaiMatchrPlugin(chai, chaiUtils) {
   });
 }
 
+chaiMatchrPlugin.setDefaultConfig = matchr.setDefaultConfig;
+
 module.exports = chaiMatchrPlugin;

@@ -2,6 +2,12 @@
 
 // constants
 
+const DEFAULT_CONFIG = {
+  matchPartialObjects: true,
+  matchPartialArrays: true,
+  matchOutOfOrderArrays: true,
+};
+
 const NATIVE_CONSTRUCTORS = [
   { Type: Array, detect: Array.isArray },
   { Type: Boolean, detect: (bool) => typeof bool === 'boolean' },
@@ -15,8 +21,33 @@ const NATIVE_CONSTRUCTORS = [
 
 // private functions
 
-function matchArray(actual, matcher) {
-  return actual instanceof Array && matcher.every((item) => actual.some((o) => matchr(o, item)));
+function matchArray(actual, matcher, config) {
+  if (!(actual instanceof Array)) {
+    return false;
+  }
+  if (!config.matchPartialArrays && matcher.length !== actual.length) {
+    return false;
+  }
+  if (matcher.length > actual.length) {
+    return false;
+  }
+  if (config.matchOutOfOrderArrays) {
+    return matcher.every(
+      (nestedMatch) => actual.some(
+        (nestedActual) => matchr(nestedActual, nestedMatch)
+      )
+    );
+  }
+  let actualIndex = 0;
+  for (const nestedMatcher of matcher) {
+    while (actualIndex < actual.length && !matchr(actual[actualIndex], nestedMatcher)) {
+      actualIndex++;
+    }
+    if (actualIndex === actual.length) {
+      return false;
+    }
+  }
+  return true;
 }
 
 function matchDate(actual, matcher) {
@@ -27,8 +58,12 @@ function matchDate(actual, matcher) {
   return date.getTime() === actual.getTime();
 }
 
-function matchObject(actual, matcher) {
+function matchObject(actual, matcher, config) {
   if (actual.constructor !== matcher.constructor) {
+    return false;
+  }
+  const matcherKeys = Object.keys(matcher);
+  if (!config.matchPartialObjects && Object.keys(actual).length !== matcherKeys.length) {
     return false;
   }
   return Object.keys(matcher).every((prop) => matchr(actual[prop], matcher[prop]));
@@ -44,7 +79,9 @@ function parseDate(dateLike) {
 
 // exports
 
-function matchr(actual, matcher) {
+function matchr(actual, matcher, config) {
+  config = Object.assign({}, DEFAULT_CONFIG, config);
+
   // If the matcher is a function, execute it
   if (typeof matcher === 'function') {
     // Match native constructors by type
@@ -87,11 +124,17 @@ function matchr(actual, matcher) {
 
   // Arrays match if all items in the matcher match.
   if (Array.isArray(matcher)) {
-    return matchArray(actual, matcher);
+    return matchArray(actual, matcher, config);
   }
 
   // Objects match if all properties in the matcher match.
-  return matchObject(actual, matcher);
+  return matchObject(actual, matcher, config);
 } // end matchr
+
+Object.assign(matchr, {
+  setDefaultConfig(config) {
+    Object.assign(DEFAULT_CONFIG, config);
+  },
+});
 
 module.exports = matchr;

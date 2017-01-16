@@ -4,7 +4,13 @@
 
 // register
 
-require('../jasmine'); // expect(actual).toMatchr(expected)
+const matchr = require('../jasmine'); // expect(actual).toMatchr(expected)
+
+// config
+
+it('should have access to config', () => {
+  expect(matchr.setDefaultConfig).toBeInstanceOf(Function);
+});
 
 // primitives
 
@@ -61,9 +67,6 @@ it('should match primitive types', () => {
 it('should execute regular expressions', () => {
   expect('aaa').toMatchr(/a+/);
   expect('aaa').not.toMatchr(/b+/);
-  expect(['aaa', 'bbb']).toMatchr([/a+/]);
-  expect(['aaa', 'bbb']).toMatchr([/a+/, /b+/]);
-  expect(['aaa', 'bbb']).not.toMatchr([/a+/, /c+/]);
 });
 
 // dates
@@ -100,24 +103,53 @@ it('should match values of constructed objects', () => {
 
 // arrays
 
-it('should compare arrays', () => {
+it('should match arrays', () => {
   expect([]).toMatchr([]);
-  expect([1]).toMatchr([]);
+  expect([1, 2, 3]).toMatchr([1, 2, 3]);
+});
+
+it('should not match arrays', () => {
+  expect({}).not.toMatchr([]);
   expect([]).not.toMatchr([1]);
-  expect([1, 2, 3]).toMatchr([3, 1]);
-  expect([1, 2, 3]).not.toMatchr([2, 4]);
+});
+
+it('should match partial arrays', () => {
+  matchr.setDefaultConfig({ matchPartialArrays: true });
+  expect([1, 2, 3]).toMatchr([1, 2]);
+  expect([1, 2, 3]).toMatchr([2, 3]);
+  expect([1, 2, 3]).toMatchr([1, 3]);
+  expect([1, 2, 3]).toMatchr([]);
+});
+
+it('should not match partial arrays', () => {
+  matchr.setDefaultConfig({ matchPartialArrays: false });
+  expect([1, 2, 3]).not.toMatchr([1, 2]);
+});
+
+it('should match out-of-order arrays', () => {
+  matchr.setDefaultConfig({ matchOutOfOrderArrays: true });
+  expect([1, 2, 3]).toMatchr([2, 1, 3]);
+});
+
+it('should not match out-of-order arrays', () => {
+  matchr.setDefaultConfig({ matchOutOfOrderArrays: false });
+  expect([1, 2, 3]).not.toMatchr([2, 1, 3]);
 });
 
 // plain objects
 
-it('should compare properties', () => {
+it('should match properties', () => {
   expect({ a: 1, b: 2 }).toMatchr({ a: 1, b: 2 });
-  expect({ a: 1, b: 2 }).not.toMatchr({ a: 2, b: 2 });
 });
 
-it('should ignore extra properties', () => {
+it('should match partial properties', () => {
+  matchr.setDefaultConfig({ matchPartialObjects: true });
   expect({ a: 1, b: 2 }).toMatchr({ a: 1 });
-  expect({ a: 1, b: 2 }).not.toMatchr({ a: 2 });
+});
+
+it('should not match partial properties', () => {
+  matchr.setDefaultConfig({ matchPartialObjects: false });
+  expect({ a: 1, b: 2 }).not.toMatchr({ a: 1 });
 });
 
 it('should not match when properties are missing', () => {
@@ -126,36 +158,26 @@ it('should not match when properties are missing', () => {
 
 // nested
 
-it('should compare nested objects', () => {
-  expect({ a: { b: 1, c: 2 } }).toMatchr({ a: { b: 1 } });
-  expect({ a: { b: 1, c: 2 } }).not.toMatchr({ a: { b: 2 } });
-  expect({ a: { b: { c: 1 } } }).toMatchr({ a: { b: { } } });
-  expect({ a: { b: { c: 1 } } }).not.toMatchr({ a: { c: 2 } });
+it('should match nested objects', () => {
+  expect({ a: { b: { c: 1 } } }).toMatchr({ a: { b: { c: 1 } } });
 });
 
-it('should compare arrays inside objects', () => {
-  expect({ a: [1, 2] }).toMatchr({ a: [1] });
-  expect({ a: [1, 2] }).not.toMatchr({ a: [3] });
+it('should match arrays inside objects', () => {
+  expect({ a: [1, 2] }).toMatchr({ a: [1, 2] });
 });
 
-it('should compare objects inside arrays', () => {
-  expect([{ a: 1 }, { b: 2 }]).toMatchr([{ a: 1 }]);
-  expect([{ a: 1 }, { b: 2 }]).toMatchr([{ b: 2 }, { a: 1 }]);
-  expect([{ a: 1 }, { b: 2 }]).toMatchr([]);
-  expect([{ a: 1 }, { b: 2 }]).not.toMatchr([{ b: 3 }]);
+it('should match objects inside arrays', () => {
+  expect([{ a: 1 }, { b: 2 }]).toMatchr([{ a: 1 }, { b: 2 }]);
 });
 
 // functions
 
-it('should execute functions', () => {
+it('should match with custom functions', () => {
   const isOne = (value) => value === 1;
   expect(1).toMatchr(isOne);
   expect(2).not.toMatchr(isOne);
-  expect({ one: 1, two: 2 }).toMatchr({ one: isOne });
-  expect({ one: 1, two: 2 }).not.toMatchr({ two: isOne });
-  expect([2, 3]).not.toMatchr([isOne]);
-  expect([1, 2]).toMatchr([isOne]);
-  expect([2, 3]).not.toMatchr([isOne]);
+  expect({ one: 1 }).toMatchr({ one: isOne });
+  expect([1]).toMatchr([isOne]);
 });
 
 // reject

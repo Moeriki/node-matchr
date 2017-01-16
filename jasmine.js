@@ -18,3 +18,5 @@ function toMatchr(received, actual) {
 // extend jest
 
 expect.extend({ toMatchr });
+
+module.exports = matchr;

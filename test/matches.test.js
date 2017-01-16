@@ -6,6 +6,12 @@
 
 const matches = require('../matches'); // matches(expected)(actual)
 
+// config
+
+it('should have access to config', () => {
+  expect(matches.setDefaultConfig).toBeInstanceOf(Function);
+});
+
 // primitives
 
 it('should match primitives', () => {
@@ -71,9 +77,6 @@ it('should match primitive types', () => {
 it('should execute regular expressions', () => {
   expect(matches(/a+/)('aaa')).toBe(true);
   expect(matches(/b+/)('aaa')).toBe(false);
-  expect(matches([/a+/])(['aaa', 'bbb'])).toBe(true);
-  expect(matches([/a+/, /b+/])(['aaa', 'bbb'])).toBe(true);
-  expect(matches([/a+/, /c+/])(['aaa', 'bbb'])).toBe(false);
 });
 
 // dates
@@ -110,24 +113,53 @@ it('should match values of constructed objects', () => {
 
 // arrays
 
-it('should compare arrays', () => {
+it('should match arrays', () => {
   expect(matches([])([])).toBe(true);
-  expect(matches([])([1])).toBe(true);
-  expect(matches([1])([])).toBe(false);
-  expect(matches([3, 1])([1, 2, 3])).toBe(true);
-  expect(matches([2, 4])([1, 2, 3])).toBe(false);
+  expect(matches([1, 2, 3])([1, 2, 3])).toBe(true);
+});
+
+it('should not match arrays', () => {
+  expect(matches([])({})).toBe(false);
+  expect(matches([1, 2, 3])([])).toBe(false);
+});
+
+it('should match partial arrays', () => {
+  matches.setDefaultConfig({ matchPartialArrays: true });
+  expect(matches([1, 2])([1, 2, 3])).toBe(true);
+  expect(matches([2, 3])([1, 2, 3])).toBe(true);
+  expect(matches([1, 3])([1, 2, 3])).toBe(true);
+  expect(matches([])([1, 2, 3])).toBe(true);
+});
+
+it('should not match partial arrays', () => {
+  matches.setDefaultConfig({ matchPartialArrays: false });
+  expect(matches([1, 2])([1, 2, 3])).toBe(false);
+});
+
+it('should match out-of-order arrays', () => {
+  matches.setDefaultConfig({ matchOutOfOrderArrays: true });
+  expect(matches([2, 1, 3])([1, 2, 3])).toBe(true);
+});
+
+it('should not match out-of-order arrays', () => {
+  matches.setDefaultConfig({ matchOutOfOrderArrays: false });
+  expect(matches([2, 1, 3])([1, 2, 3])).toBe(false);
 });
 
 // plain objects
 
-it('should compare properties', () => {
+it('should match properties', () => {
   expect(matches({ a: 1, b: 2 })({ a: 1, b: 2 })).toBe(true);
-  expect(matches({ a: 2, b: 2 })({ a: 1, b: 2 })).toBe(false);
 });
 
-it('should ignore extra properties', () => {
+it('should match partial properties', () => {
+  matches.setDefaultConfig({ matchPartialObjects: true });
   expect(matches({ a: 1 })({ a: 1, b: 2 })).toBe(true);
-  expect(matches({ a: 2 })({ a: 1, b: 2 })).toBe(false);
+});
+
+it('should not match partial properties', () => {
+  matches.setDefaultConfig({ matchPartialObjects: false });
+  expect(matches({ a: 1 })({ a: 1, b: 2 })).toBe(false);
 });
 
 it('should not match when properties are missing', () => {
@@ -136,34 +168,24 @@ it('should not match when properties are missing', () => {
 
 // nested
 
-it('should compare nested objects', () => {
-  expect(matches({ a: { b: 1 } })({ a: { b: 1, c: 2 } })).toBe(true);
-  expect(matches({ a: { b: 2 } })({ a: { b: 1, c: 2 } })).toBe(false);
-  expect(matches({ a: { b: { } } })({ a: { b: { c: 1 } } })).toBe(true);
-  expect(matches({ a: { c: 2 } })({ a: { b: { c: 1 } } })).toBe(false);
+it('should match nested objects', () => {
+  expect(matches({ a: { b: { c: 1 } } })({ a: { b: { c: 1 } } })).toBe(true);
 });
 
-it('should compare arrays inside objects', () => {
-  expect(matches({ a: [1] })({ a: [1, 2] })).toBe(true);
-  expect(matches({ a: [3] })({ a: [1, 2] })).toBe(false);
+it('should match arrays inside objects', () => {
+  expect(matches({ a: [1, 2] })({ a: [1, 2] })).toBe(true);
 });
 
-it('should compare objects inside arrays', () => {
-  expect(matches([{ a: 1 }])([{ a: 1 }, { b: 2 }])).toBe(true);
-  expect(matches([{ b: 2 }, { a: 1 }])([{ a: 1 }, { b: 2 }])).toBe(true);
-  expect(matches([])([{ a: 1 }, { b: 2 }])).toBe(true);
-  expect(matches([{ b: 3 }])([{ a: 1 }, { b: 2 }])).toBe(false);
+it('should match objects inside arrays', () => {
+  expect(matches([{ a: 1 }, { b: 2 }])([{ a: 1 }, { b: 2 }])).toBe(true);
 });
 
 // functions
 
-it('should execute functions', () => {
+it('should match with custom functions', () => {
   const isOne = (value) => value === 1;
   expect(matches(isOne)(1)).toBe(true);
   expect(matches(isOne)(2)).toBe(false);
-  expect(matches({ one: isOne })({ one: 1, two: 2 })).toBe(true);
-  expect(matches({ two: isOne })({ one: 1, two: 2 })).toBe(false);
-  expect(matches([isOne])([2, 3])).toBe(false);
-  expect(matches([isOne])([1, 2])).toBe(true);
-  expect(matches([isOne])([2, 3])).toBe(false);
+  expect(matches({ one: isOne })({ one: 1 })).toBe(true);
+  expect(matches([isOne])([1])).toBe(true);
 });
