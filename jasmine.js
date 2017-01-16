@@ -9,9 +9,9 @@ const matchr = require('./index');
 
 // private functions
 
-function toMatchr(received, actual) {
-  const pass = matchr(received, actual);
-  const message = () => `expected ${utils.pretty(received)} ${pass ? 'not ' : ''}to match ${utils.pretty(actual)}`;
+function toMatchr(value, pattern, options) {
+  const pass = matchr(value, pattern, options);
+  const message = () => `expected ${utils.pretty(value)} ${pass ? 'not ' : ''}to match ${utils.pretty(pattern)}`;
   return { message, pass };
 }
 

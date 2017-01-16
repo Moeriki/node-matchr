@@ -4,12 +4,12 @@
 
 // modules
 
-const matchr = require('../index'); // matchr(actual, expected)
+const matchr = require('../index'); // matchr(value, pattern)
 
 // config
 
 it('should have access to config', () => {
-  expect(matchr.setDefaultConfig).toBeInstanceOf(Function);
+  expect(matchr.setDefaultOptions).toBeInstanceOf(Function);
 });
 
 // primitives
@@ -124,7 +124,7 @@ it('should not match arrays', () => {
 });
 
 it('should match partial arrays', () => {
-  matchr.setDefaultConfig({ matchPartialArrays: true });
+  matchr.setDefaultOptions({ matchPartialArrays: true });
   expect(matchr([1, 2, 3], [1, 2])).toBe(true);
   expect(matchr([1, 2, 3], [2, 3])).toBe(true);
   expect(matchr([1, 2, 3], [1, 3])).toBe(true);
@@ -132,17 +132,17 @@ it('should match partial arrays', () => {
 });
 
 it('should not match partial arrays', () => {
-  matchr.setDefaultConfig({ matchPartialArrays: false });
+  matchr.setDefaultOptions({ matchPartialArrays: false });
   expect(matchr([1, 2, 3], [1, 2])).toBe(false);
 });
 
 it('should match out-of-order arrays', () => {
-  matchr.setDefaultConfig({ matchOutOfOrderArrays: true });
+  matchr.setDefaultOptions({ matchOutOfOrderArrays: true });
   expect(matchr([1, 2, 3], [2, 1, 3])).toBe(true);
 });
 
 it('should not match out-of-order arrays', () => {
-  matchr.setDefaultConfig({ matchOutOfOrderArrays: false });
+  matchr.setDefaultOptions({ matchOutOfOrderArrays: false });
   expect(matchr([1, 2, 3], [2, 1, 3])).toBe(false);
 });
 
@@ -153,12 +153,12 @@ it('should match properties', () => {
 });
 
 it('should match partial properties', () => {
-  matchr.setDefaultConfig({ matchPartialObjects: true });
+  matchr.setDefaultOptions({ matchPartialObjects: true });
   expect(matchr({ a: 1, b: 2 }, { a: 1 })).toBe(true);
 });
 
 it('should not match partial properties', () => {
-  matchr.setDefaultConfig({ matchPartialObjects: false });
+  matchr.setDefaultOptions({ matchPartialObjects: false });
   expect(matchr({ a: 1, b: 2 }, { a: 1 })).toBe(false);
 });
 

@@ -6,12 +6,12 @@ const matchr = require('./index.js');
 
 // exports
 
-function matches(matcher, config) {
-  return function wrappedMatcher(actual) {
-    return matchr(actual, matcher, config);
+function matches(pattern, options) {
+  return function wrappedMatcher(value) {
+    return matchr(value, pattern, options);
   };
 }
 
-matches.setDefaultConfig = matchr.setDefaultConfig;
+matches.setDefaultOptions = matchr.setDefaultOptions;
 
 module.exports = matches;

@@ -9,12 +9,12 @@ const matchr = require('../chai');
 
 chai.use(matchr);
 
-const expect = chai.expect; // expect(actual).to.matchr(expected)
+const expect = chai.expect; // expect(value).to.matchr(pattern)
 
 // config
 
 it('should have access to config', () => {
-  expect(matchr).to.have.property('setDefaultConfig').that.is.a('function');
+  expect(matchr).to.have.property('setDefaultOptions').that.is.a('function');
 });
 
 // primitives
@@ -119,7 +119,7 @@ it('should not match arrays', () => {
 });
 
 it('should match partial arrays', () => {
-  matchr.setDefaultConfig({ matchPartialArrays: true });
+  matchr.setDefaultOptions({ matchPartialArrays: true });
   expect([1, 2, 3]).to.matchr([1, 2]);
   expect([1, 2, 3]).to.matchr([2, 3]);
   expect([1, 2, 3]).to.matchr([1, 3]);
@@ -127,17 +127,17 @@ it('should match partial arrays', () => {
 });
 
 it('should not match partial arrays', () => {
-  matchr.setDefaultConfig({ matchPartialArrays: false });
+  matchr.setDefaultOptions({ matchPartialArrays: false });
   expect([1, 2, 3]).to.not.matchr([1, 2]);
 });
 
 it('should match out-of-order arrays', () => {
-  matchr.setDefaultConfig({ matchOutOfOrderArrays: true });
+  matchr.setDefaultOptions({ matchOutOfOrderArrays: true });
   expect([1, 2, 3]).to.matchr([2, 1, 3]);
 });
 
 it('should not match out-of-order arrays', () => {
-  matchr.setDefaultConfig({ matchOutOfOrderArrays: false });
+  matchr.setDefaultOptions({ matchOutOfOrderArrays: false });
   expect([1, 2, 3]).to.not.matchr([2, 1, 3]);
 });
 
@@ -148,12 +148,12 @@ it('should match properties', () => {
 });
 
 it('should match partial properties', () => {
-  matchr.setDefaultConfig({ matchPartialObjects: true });
+  matchr.setDefaultOptions({ matchPartialObjects: true });
   expect({ a: 1, b: 2 }).to.matchr({ a: 1 });
 });
 
 it('should not match partial properties', () => {
-  matchr.setDefaultConfig({ matchPartialObjects: false });
+  matchr.setDefaultOptions({ matchPartialObjects: false });
   expect({ a: 1, b: 2 }).to.not.matchr({ a: 1 });
 });
 
@@ -173,6 +173,21 @@ it('should match arrays inside objects', () => {
 
 it('should match objects inside arrays', () => {
   expect([{ a: 1 }, { b: 2 }]).to.matchr([{ a: 1 }, { b: 2 }]);
+});
+
+// options
+
+it('should configure options', () => {
+  matchr.setDefaultOptions({
+    matchPartialObjects: false,
+    matchPartialArrays: false,
+    matchOutOfOrderArrays: false,
+  });
+  expect([{ a: 1, b: 2 }, [1, 2, 3]]).to.matchr([{ a: 1 }, [3, 1]], {
+    matchPartialObjects: true,
+    matchPartialArrays: true,
+    matchOutOfOrderArrays: true,
+  });
 });
 
 // functions

@@ -15,16 +15,16 @@ function chaiMatchrPlugin(chai, chaiUtils) {
   const flag = chaiUtils.flag;
   const assert = chai.assert;
 
-  Assertion.addMethod('matchr', function chaiMatchr(expected) {
-    const actual = flag(this, 'object');
+  Assertion.addMethod('matchr', function chaiMatchr(pattern, options) {
+    const value = flag(this, 'object');
     const negate = Boolean(flag(this, 'negate'));
     assert(
-      matchr(actual, expected) !== negate,
-      `expected ${utils.pretty(actual)} ${negate ? 'not ' : ''}to match ${utils.pretty(expected)}`
+      matchr(value, pattern, options) !== negate,
+      `expected ${utils.pretty(value)} ${negate ? 'not ' : ''}to match ${utils.pretty(pattern)}`
     );
   });
 }
 
-chaiMatchrPlugin.setDefaultConfig = matchr.setDefaultConfig;
+chaiMatchrPlugin.setDefaultOptions = matchr.setDefaultOptions;
 
 module.exports = chaiMatchrPlugin;

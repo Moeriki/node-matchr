@@ -26,34 +26,29 @@
 $ npm install matchr
 ```
 
-```javascript
+```js
 const matchr = require('matchr');
-// matchr(actual, expected);
 ```
 
 ## Features
 
 ### Basics
 
-```javascript
-// matchr(actual, expected)
+```js
+// matchr(value, pattern)
 
 matchr({ a: 1, b: 2 }, { a: 1 }); // true
-
-matchr({ a: 1, b: 2 }, { c: 3 }); // false
 
 matchr([1, 2, 3], [1]); // true
 
 matchr([1, 2, 3], [1, 2]); // true
 
 matchr([1, 2, 3], [2, 1]); // true
-
-matchr([1, 2, 3], [4]); // false
 ```
 
 ### Date matching
 
-```javascript
+```js
 matchr(new Date('2016-08-14T05:00:00.000Z'), new Date('2016-08-14T05:00:00.000Z'))); // true
 
 matchr(new Date('2016-08-14T05:00:00.000Z'), '2016-08-14T05:00:00.000Z')); // true
@@ -63,13 +58,13 @@ matchr(new Date('2016-08-14T05:00:00.000Z'), 1471150800000)); // true
 
 ### RegExp matching
 
-```javascript
+```js
 matchr('John', /oh/); // true
 ```
 
 ### Function matching
 
-```javascript
+```js
 const isNumber = (n) => typeof n === 'number';
 
 matchr(42, isNumber); // true
@@ -77,7 +72,7 @@ matchr(42, isNumber); // true
 
 ### Type matching
 
-```javascript
+```js
 matchr([], Array); // true
 matchr(true, Boolean); // true
 matchr(false, Boolean); // true
@@ -88,8 +83,8 @@ matchr('Hello World!', String); // true
 
 ### Deep matching
 
-```javascript
-matchr({ person: { name: 'John' } }, { person: { name: /oh/ } }); // true
+```js
+matchr({ person: { name: 'John' } }, { person: { name: 'John' } }); // true
 
 matchr([{ a: 1 }, { b: 2 }], [{ a: 1 }]); // true
 
@@ -98,44 +93,75 @@ matchr([{ a: 1 }, { b: 2 }], [{ a: 1 }]); // true
 
 Deep matching uses `matchr` recursively to match property values.
 
-```javascript
+```js
 matchr({
-	name: 'John',
-	age: 40,
-	gender: 'm',
-	hasBand: true
+  name: 'John',
+  age: 40,
+  gender: 'm',
+  hasBand: true
 }, {
-	name: String,
-	age: Number,
-	gender: /f|m/
+  name: String,
+  age: Number,
+  gender: /f|m/
 }); // true
+```
+
+### Matching options
+
+**matchPartialObjects** (default: `true`)
+
+```js
+matchr({ a: 1, b: 2 }, { a: 1 }, { matchPartialObjects: false }); // false
+```
+
+**matchPartialArrays** (default: `true`)
+
+```js
+matchr([1, 2, 3], [1, 2], { matchPartialArrays: false }); // false
+```
+
+**matchOutOfOrderArrays** (default: `true`)
+
+```js
+matchr([1, 2, 3], [3, 2, 1], { matchOutOfOrderArrays: false }); // false
+```
+
+#### Changing default options
+
+```js
+matchr.setDefaultOptions({
+  // matchPartialObjects: Boolean,
+  // matchPartialArrays: Boolean,
+  // matchOutOfOrderArrays: Boolean,
+});
 ```
 
 ### FP support
 
 `matches` reverses argument order and splits function in two to allow a more functional style.
 
-```javascript
-const matches = require('matchr/matches');
+```js
+const matches = require('matchr/matches'); // matches(pattern)(value)
 
-// matches(expected)(actual)
+const hasANumber = matches({ a: Number });
 
-const matcher = matches({ a: Number });
-
-matcher({ a: 1, b: 2 }); // true
+hasANumber({ a: 1, b: 2 }); // true
 ```
 
 ### Chai plugin
 
 Plug `matchr` into chai.
 
-```javascript
+```js
 const chai = require('chai');
 const matchr = require('matchr/chai');
+
+// matchr.setDefaultOptions({});
 
 chai.use(matchr);
 
 chai.expect({ a: 1, b: 2 }).to.matchr({ a: 1 });
+chai.expect({ a: 1, b: 2 }).to.matchr({ a: 1, b: 2 }, { matchPartialObjects: false });
 chai.expect({ a: 1, b: 2 }).to.not.matchr({ c: 3 });
 ```
 
@@ -143,9 +169,12 @@ chai.expect({ a: 1, b: 2 }).to.not.matchr({ c: 3 });
 
 Plug `matchr` into jasmine / jest.
 
-```javascript
-require('matchr/jasmine');
+```js
+const matchr = require('matchr/jasmine');
+
+// matchr.setDefaultOptions({});
 
 expect({ a: 1, b: 2 }).toMatchr({ a: 1 });
+expect({ a: 1, b: 2 }).toMatchr({ a: 1, b: 2 }, { matchPartialObjects: false });
 expect({ a: 1, b: 2 }).not.toMatchr({ c: 3 });
 ```

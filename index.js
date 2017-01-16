@@ -2,7 +2,7 @@
 
 // constants
 
-const DEFAULT_CONFIG = {
+const DEFAULT_OPTIONS = {
   matchPartialObjects: true,
   matchPartialArrays: true,
   matchOutOfOrderArrays: true,
@@ -21,52 +21,52 @@ const NATIVE_CONSTRUCTORS = [
 
 // private functions
 
-function matchArray(actual, matcher, config) {
-  if (!(actual instanceof Array)) {
+function matchArray(value, pattern, options) {
+  if (!(value instanceof Array)) {
     return false;
   }
-  if (!config.matchPartialArrays && matcher.length !== actual.length) {
+  if (!options.matchPartialArrays && pattern.length !== value.length) {
     return false;
   }
-  if (matcher.length > actual.length) {
+  if (pattern.length > value.length) {
     return false;
   }
-  if (config.matchOutOfOrderArrays) {
-    return matcher.every(
-      (nestedMatch) => actual.some(
-        (nestedActual) => matchr(nestedActual, nestedMatch)
+  if (options.matchOutOfOrderArrays) {
+    return pattern.every(
+      (nestedMatch) => value.some(
+        (nestedActual) => matchr(nestedActual, nestedMatch, options)
       )
     );
   }
-  let actualIndex = 0;
-  for (const nestedMatcher of matcher) {
-    while (actualIndex < actual.length && !matchr(actual[actualIndex], nestedMatcher)) {
-      actualIndex++;
+  let valueIndex = 0;
+  for (const nestedMatcher of pattern) {
+    while (valueIndex < value.length && !matchr(value[valueIndex], nestedMatcher, options)) {
+      valueIndex++;
     }
-    if (actualIndex === actual.length) {
+    if (valueIndex === value.length) {
       return false;
     }
   }
   return true;
 }
 
-function matchDate(actual, matcher) {
-  const date = parseDate(matcher);
+function matchDate(value, pattern) {
+  const date = parseDate(pattern);
   if (date == null || typeof date.getTime !== 'function') {
     return false;
   }
-  return date.getTime() === actual.getTime();
+  return date.getTime() === value.getTime();
 }
 
-function matchObject(actual, matcher, config) {
-  if (actual.constructor !== matcher.constructor) {
+function matchObject(value, pattern, options) {
+  if (value.constructor !== pattern.constructor) {
     return false;
   }
-  const matcherKeys = Object.keys(matcher);
-  if (!config.matchPartialObjects && Object.keys(actual).length !== matcherKeys.length) {
+  const patternKeys = Object.keys(pattern);
+  if (!options.matchPartialObjects && Object.keys(value).length !== patternKeys.length) {
     return false;
   }
-  return Object.keys(matcher).every((prop) => matchr(actual[prop], matcher[prop]));
+  return Object.keys(pattern).every((prop) => matchr(value[prop], pattern[prop]));
 }
 
 function parseDate(dateLike) {
@@ -79,61 +79,61 @@ function parseDate(dateLike) {
 
 // exports
 
-function matchr(actual, matcher, config) {
-  config = Object.assign({}, DEFAULT_CONFIG, config);
+function matchr(value, pattern, options) {
+  options = Object.assign({}, DEFAULT_OPTIONS, options);
 
-  // If the matcher is a function, execute it
-  if (typeof matcher === 'function') {
+  // If the pattern is a function, execute it
+  if (typeof pattern === 'function') {
     // Match native constructors by type
-    const nativeConstructor = NATIVE_CONSTRUCTORS.find((nativeConstructor) => nativeConstructor.Type === matcher);
+    const nativeConstructor = NATIVE_CONSTRUCTORS.find((nativeConstructor) => nativeConstructor.Type === pattern);
     if (nativeConstructor) {
-      return nativeConstructor.detect(actual);
+      return nativeConstructor.detect(value);
     }
-    return matcher(actual);
+    return pattern(value);
   }
 
-  // If the matcher is a regular expression, match it
-  if (matcher instanceof RegExp) {
-    return matcher.test(actual || '');
+  // If the pattern is a regular expression, match it
+  if (pattern instanceof RegExp) {
+    return pattern.test(value || '');
   }
 
   // Match Dates
-  if (actual instanceof Date) {
-    return matchDate(actual, matcher);
+  if (value instanceof Date) {
+    return matchDate(value, pattern);
   }
 
   // Identitical values always match.
-  if (actual === matcher) {
+  if (value === pattern) {
     return true;
   }
 
   // Null values (which are also objects) only match if both are null.
-  if (actual == null || matcher == null) {
+  if (value == null || pattern == null) {
     return false;
   }
 
   // Values of different types never match.
-  if (typeof actual !== typeof matcher) {
+  if (typeof value !== typeof pattern) {
     return false;
   }
 
   // Values that are no objects only match if they are identical (see above).
-  if (typeof actual !== 'object') {
+  if (typeof value !== 'object') {
     return false;
   }
 
-  // Arrays match if all items in the matcher match.
-  if (Array.isArray(matcher)) {
-    return matchArray(actual, matcher, config);
+  // Arrays match if all items in the pattern match.
+  if (Array.isArray(pattern)) {
+    return matchArray(value, pattern, options);
   }
 
-  // Objects match if all properties in the matcher match.
-  return matchObject(actual, matcher, config);
+  // Objects match if all properties in the pattern match.
+  return matchObject(value, pattern, options);
 } // end matchr
 
 Object.assign(matchr, {
-  setDefaultConfig(config) {
-    Object.assign(DEFAULT_CONFIG, config);
+  setDefaultOptions(options) {
+    Object.assign(DEFAULT_OPTIONS, options);
   },
 });
 
