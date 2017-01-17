@@ -123,7 +123,7 @@ it('should not match arrays', () => {
   expect(matchr([], [1, 2, 3])).toBe(false);
 });
 
-it('should match partial arrays', () => {
+it('should match partial arrays via default config', () => {
   matchr.setDefaultOptions({ matchPartialArrays: true });
   expect(matchr([1, 2, 3], [1, 2])).toBe(true);
   expect(matchr([1, 2, 3], [2, 3])).toBe(true);
@@ -131,19 +131,42 @@ it('should match partial arrays', () => {
   expect(matchr([1, 2, 3], [])).toBe(true);
 });
 
-it('should not match partial arrays', () => {
+it('should match partial arrays via inline config', () => {
+  matchr.setDefaultOptions({ matchPartialArrays: false });
+  expect(matchr([1, 2, 3], [1, 2], { matchPartialArrays: true })).toBe(true);
+  expect(matchr([1, 2, 3], [2, 3], { matchPartialArrays: true })).toBe(true);
+  expect(matchr([1, 2, 3], [1, 3], { matchPartialArrays: true })).toBe(true);
+  expect(matchr([1, 2, 3], [], { matchPartialArrays: true })).toBe(true);
+});
+
+it('should not match partial arrays via default config', () => {
   matchr.setDefaultOptions({ matchPartialArrays: false });
   expect(matchr([1, 2, 3], [1, 2])).toBe(false);
 });
 
-it('should match out-of-order arrays', () => {
+it('should not match partial arrays via inline config', () => {
+  matchr.setDefaultOptions({ matchPartialArrays: true });
+  expect(matchr([1, 2, 3], [1, 2], { matchPartialArrays: false })).toBe(false);
+});
+
+it('should match out-of-order arrays via default config', () => {
   matchr.setDefaultOptions({ matchOutOfOrderArrays: true });
   expect(matchr([1, 2, 3], [2, 1, 3])).toBe(true);
 });
 
-it('should not match out-of-order arrays', () => {
+it('should match out-of-order arrays via inline config', () => {
+  matchr.setDefaultOptions({ matchOutOfOrderArrays: false });
+  expect(matchr([1, 2, 3], [2, 1, 3], { matchOutOfOrderArrays: true })).toBe(true);
+});
+
+it('should not match out-of-order arrays via default config', () => {
   matchr.setDefaultOptions({ matchOutOfOrderArrays: false });
   expect(matchr([1, 2, 3], [2, 1, 3])).toBe(false);
+});
+
+it('should not match out-of-order arrays via inline config', () => {
+  matchr.setDefaultOptions({ matchOutOfOrderArrays: true });
+  expect(matchr([1, 2, 3], [2, 1, 3], { matchOutOfOrderArrays: false })).toBe(false);
 });
 
 // plain objects
@@ -152,14 +175,24 @@ it('should match properties', () => {
   expect(matchr({ a: 1, b: 2 }, { a: 1, b: 2 })).toBe(true);
 });
 
-it('should match partial properties', () => {
+it('should match partial properties via default config', () => {
   matchr.setDefaultOptions({ matchPartialObjects: true });
   expect(matchr({ a: 1, b: 2 }, { a: 1 })).toBe(true);
 });
 
-it('should not match partial properties', () => {
+it('should match partial properties via inline config', () => {
+  matchr.setDefaultOptions({ matchPartialObjects: false });
+  expect(matchr({ a: 1, b: 2 }, { a: 1 }, { matchPartialObjects: true })).toBe(true);
+});
+
+it('should not match partial properties via default config', () => {
   matchr.setDefaultOptions({ matchPartialObjects: false });
   expect(matchr({ a: 1, b: 2 }, { a: 1 })).toBe(false);
+});
+
+it('should not match partial properties via inline config', () => {
+  matchr.setDefaultOptions({ matchPartialObjects: true });
+  expect(matchr({ a: 1, b: 2 }, { a: 1 }, { matchPartialObjects: false })).toBe(false);
 });
 
 it('should not match when properties are missing', () => {
@@ -176,8 +209,34 @@ it('should match arrays inside objects', () => {
   expect(matchr({ a: [1, 2] }, { a: [1, 2] })).toBe(true);
 });
 
+it('should match partial out-of-order arrays inside objects via default config', () => {
+  matchr.setDefaultOptions({
+    matchPartialArrays: true,
+    matchOutOfOrderArrays: true,
+  });
+  expect(matchr({ a: [2, 1, 3] }, { a: [1, 2] })).toBe(true);
+});
+
+it('should match partial out-of-order arrays inside objects via inline config', () => {
+  matchr.setDefaultOptions({
+    matchPartialArrays: false,
+    matchOutOfOrderArrays: false,
+  });
+  expect(matchr({ a: [2, 1, 3] }, { a: [1, 2] }, { matchPartialArrays: true, matchOutOfOrderArrays: true })).toBe(true);
+});
+
 it('should match objects inside arrays', () => {
   expect(matchr([{ a: 1 }, { b: 2 }], [{ a: 1 }, { b: 2 }])).toBe(true);
+});
+
+it('should match partial objects inside arrays via default config', () => {
+  matchr.setDefaultOptions({ matchPartialObjects: true });
+  expect(matchr([{ a: 1, b: 2 }], [{ a: 1 }])).toBe(true);
+});
+
+it('should match partial objects inside arrays via inline config', () => {
+  matchr.setDefaultOptions({ matchPartialObjects: false });
+  expect(matchr([{ a: 1, b: 2 }], [{ a: 1 }], { matchPartialObjects: true })).toBe(true);
 });
 
 // functions

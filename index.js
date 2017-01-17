@@ -66,7 +66,7 @@ function matchObject(value, pattern, options) {
   if (!options.matchPartialObjects && Object.keys(value).length !== patternKeys.length) {
     return false;
   }
-  return Object.keys(pattern).every((prop) => matchr(value[prop], pattern[prop]));
+  return Object.keys(pattern).every((prop) => matchr(value[prop], pattern[prop], options));
 }
 
 function parseDate(dateLike) {
