@@ -6,13 +6,10 @@
       <img src="https://img.shields.io/npm/v/matchr.svg" alt="npm version">
     </a>
     <a href="https://travis-ci.org/Moeriki/node-matchr">
-      <img src="https://travis-ci.org/Moeriki/node-matchr?branch=master" alt="Build Status"></img>
+      <img src="https://travis-ci.org/Moeriki/node-matchr.svg?branch=master" alt="Build Status"></img>
     </a>
     <a href="https://coveralls.io/github/Moeriki/node-matchr?branch=master">
       <img src="https://coveralls.io/repos/github/Moeriki/node-matchr/badge.svg?branch=master" alt="Coverage Status"></img>
-    </a>
-    <a href="https://david-dm.org/moeriki/node-matchr">
-      <img src="https://david-dm.org/moeriki/node-matchr/status.svg" alt="dependencies Status"></img>
     </a>
     <a href="https://snyk.io/test/github/moeriki/node-matchr">
       <img src="https://snyk.io/test/github/moeriki/node-matchr/badge.svg" alt="Known Vulnerabilities"></img>
