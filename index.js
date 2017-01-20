@@ -11,9 +11,15 @@ const DEFAULT_OPTIONS = {
 const NATIVE_CONSTRUCTORS = [
   { Type: Array, detect: Array.isArray },
   { Type: Boolean, detect: (bool) => typeof bool === 'boolean' },
+  { Type: Date, detect: (date) => date instanceof Date },
   { Type: Function, detect: (func) => typeof func === 'function' },
   { Type: Number, detect: (numb) => typeof numb === 'number' },
-  { Type: Object, detect: (obj) => obj !== null && !Array.isArray(obj) && !(obj instanceof RegExp) && typeof obj === 'object' },
+  { Type: Object, detect: (obj) => obj !== null
+    && !Array.isArray(obj)
+    && !(obj instanceof Date)
+    && !(obj instanceof RegExp)
+    && typeof obj === 'object'
+  },
   { Type: RegExp, detect: (regexp) => regexp instanceof RegExp },
   { Type: String, detect: (str) => typeof str === 'string' },
   { Type: Symbol, detect: (symb) => typeof symb === 'symbol' },
@@ -82,6 +88,11 @@ function parseDate(dateLike) {
 function matchr(value, pattern, options) {
   options = Object.assign({}, DEFAULT_OPTIONS, options);
 
+  // Identitical values always match.
+  if (value === pattern) {
+    return true;
+  }
+
   // If the pattern is a function, execute it
   if (typeof pattern === 'function') {
     // Match native constructors by type
@@ -92,24 +103,25 @@ function matchr(value, pattern, options) {
     return pattern(value);
   }
 
+  // Null values (which are also objects) only match if both are null.
+  if (value == null || pattern == null) {
+    return false;
+  }
+
   // If the pattern is a regular expression, match it
   if (pattern instanceof RegExp) {
-    return pattern.test(value || '');
+    if (value instanceof RegExp) {
+      return String(pattern) === String(value);
+    }
+    if (value instanceof Date) {
+      value = value.toISOString();
+    }
+    return pattern.test(value);
   }
 
   // Match Dates
   if (value instanceof Date) {
     return matchDate(value, pattern);
-  }
-
-  // Identitical values always match.
-  if (value === pattern) {
-    return true;
-  }
-
-  // Null values (which are also objects) only match if both are null.
-  if (value == null || pattern == null) {
-    return false;
   }
 
   // Values of different types never match.
