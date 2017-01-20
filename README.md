@@ -56,7 +56,13 @@ matchr(new Date('2016-08-14T05:00:00.000Z'), 1471150800000)); // true
 ### RegExp matching
 
 ```js
+matchr(/oh/, /oh/); // true
+
 matchr('John', /oh/); // true
+
+matchr(42, /4[0-9]/); // true
+
+matchr(new Date('2017-01-20T18:48:08.745Z'), /2017/); // true
 ```
 
 ### Function matching
@@ -123,7 +129,7 @@ matchr([1, 2, 3], [1, 2], { matchPartialArrays: false }); // false
 matchr([1, 2, 3], [3, 2, 1], { matchOutOfOrderArrays: false }); // false
 ```
 
-#### Changing default options
+#### Changing default matching options
 
 ```js
 matchr.setDefaultOptions({
@@ -181,3 +187,5 @@ const func = jest.fn();
 func('test');
 expect(func).toHaveBeenCalledWith(matches(/es/));
 ```
+
+**NOTE** I'm waiting for [facebook/jest/pull/2476](https://github.com/facebook/jest/pull/2476) to land in a release to improve the output of the asymmetric matcher.
