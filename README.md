@@ -162,20 +162,22 @@ chai.expect({ a: 1, b: 2 }).to.matchr({ a: 1, b: 2 }, { matchPartialObjects: fal
 chai.expect({ a: 1, b: 2 }).to.not.matchr({ c: 3 });
 ```
 
-### Jasmine / Jest plugin
+### Jest plugin
 
-Plug `matchr` into jasmine / jest.
+Plug `matchr` into jest.
 
 ```javascript
-const matchr = require('matchr/jasmine');
+const matches = require('matchr/jest');
 
-expect({ a: 1, b: 2 }).toEqual(matchr({ a: 1 }));
-expect({ a: 1, b: 2 }).toEqual(matchr({ a: 1, b: 2 }, { matchPartialObjects: false }));
-expect({ a: 1, b: 2 }).not.toEqual(matchr({ c: 3 }));
+// matches.setDefaultOptions();
+
+expect({ a: 1, b: 2 }).toEqual(matches({ a: 1 }));
+expect({ a: 1, b: 2 }).toEqual(matches({ a: 1, b: 2 }, { matchPartialObjects: false }));
+expect({ a: 1, b: 2 }).not.toEqual(matches({ c: 3 }));
 ```
 
 ```javascript
 const func = jest.fn();
 func('test');
-expect(func).toHaveBeenCalledWith(matchr(/es/));
+expect(func).toHaveBeenCalledWith(matches(/es/));
 ```
