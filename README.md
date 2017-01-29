@@ -112,18 +112,21 @@ matchr({
 **matchPartialObjects** (default: `true`)
 
 ```js
+matchr({ a: 1, b: 2 }, { a: 1 }, { matchPartialObjects: true }); // true
 matchr({ a: 1, b: 2 }, { a: 1 }, { matchPartialObjects: false }); // false
 ```
 
 **matchPartialArrays** (default: `true`)
 
 ```js
+matchr([1, 2, 3], [1, 2], { matchPartialArrays: true }); // true
 matchr([1, 2, 3], [1, 2], { matchPartialArrays: false }); // false
 ```
 
 **matchOutOfOrderArrays** (default: `true`)
 
 ```js
+matchr([1, 2, 3], [3, 2, 1], { matchOutOfOrderArrays: true }); // true
 matchr([1, 2, 3], [3, 2, 1], { matchOutOfOrderArrays: false }); // false
 ```
 
