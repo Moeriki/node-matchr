@@ -4,7 +4,7 @@
 
 // register
 
-const matches = require('../jest'); // expect(value).toEqual(matchr(pattern))
+const matches = require('../jest'); // expect(value).toEqual(matches(pattern))
 
 // tests
 

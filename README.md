@@ -24,7 +24,7 @@ $ npm install matchr
 ```
 
 ```js
-const matchr = require('matchr');
+const matchr = require('matchr'); // matchr(value, pattern)
 ```
 
 ## Features
@@ -32,8 +32,6 @@ const matchr = require('matchr');
 ### Basics
 
 ```javascript
-// matchr(actual, pattern)
-
 matchr({ a: 1, b: 2 }, { a: 1 }); // true
 
 matchr([1, 2, 3], [1]); // true

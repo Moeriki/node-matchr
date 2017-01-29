@@ -40,7 +40,7 @@ function matchArray(value, pattern, options) {
   if (options.matchOutOfOrderArrays) {
     return pattern.every(
       (nestedMatch) => value.some(
-        (nestedActual) => matchr(nestedActual, nestedMatch, options)
+        (nestedValue) => matchr(nestedValue, nestedMatch, options)
       )
     );
   }

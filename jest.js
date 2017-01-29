@@ -29,8 +29,8 @@ function Matches(pattern, options) {
   this.options = options;
 }
 
-Matches.prototype.asymmetricMatch = function asymmetricMatch(actual) {
-  return matchr(actual, this.pattern, this.options);
+Matches.prototype.asymmetricMatch = function asymmetricMatch(value) {
+  return matchr(value, this.pattern, this.options);
 };
 
 Matches.prototype.jasmineToString = function jasmineToString() {
