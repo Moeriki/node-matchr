@@ -85,11 +85,20 @@ matchr('Hello World!', String); // true
 ### Deep matching
 
 ```js
-matchr({ person: { name: 'John' } }, { person: { name: 'John' } }); // true
+matchr(
+  { person: { name: 'John' } },
+  { person: { name: 'John' } }
+); // true
 
-matchr([{ a: 1 }, { b: 2 }], [{ a: 1 }]); // true
+matchr(
+  [{ a: 1 }, { b: 2 }],
+  [{ a: 1 }]
+); // true
 
-matchr([{ a: 1 }, { b: 2 }], [{ a: 1 }]); // true
+matchr(
+  [{ a: 1 }, { b: 2 }],
+  [{ a: 1 }]
+); // true
 ```
 
 Deep matching uses `matchr` recursively to match property values.
@@ -112,22 +121,46 @@ matchr({
 **matchPartialObjects** (default: `true`)
 
 ```js
-matchr({ a: 1, b: 2 }, { a: 1 }, { matchPartialObjects: true }); // true
-matchr({ a: 1, b: 2 }, { a: 1 }, { matchPartialObjects: false }); // false
+matchr(
+  { a: 1, b: 2 },
+  { a: 1 },
+  { matchPartialObjects: true }
+); // true
+matchr(
+  { a: 1, b: 2 },
+  { a: 1 },
+  { matchPartialObjects: false }
+); // false
 ```
 
 **matchPartialArrays** (default: `true`)
 
 ```js
-matchr([1, 2, 3], [1, 2], { matchPartialArrays: true }); // true
-matchr([1, 2, 3], [1, 2], { matchPartialArrays: false }); // false
+matchr(
+  [1, 2, 3],
+  [1, 2],
+  { matchPartialArrays: true }
+); // true
+matchr(
+  [1, 2, 3],
+  [1, 2],
+  { matchPartialArrays: false }
+); // false
 ```
 
 **matchOutOfOrderArrays** (default: `true`)
 
 ```js
-matchr([1, 2, 3], [3, 2, 1], { matchOutOfOrderArrays: true }); // true
-matchr([1, 2, 3], [3, 2, 1], { matchOutOfOrderArrays: false }); // false
+matchr(
+  [1, 2, 3],
+  [3, 2, 1],
+  { matchOutOfOrderArrays: true }
+); // true
+matchr(
+  [1, 2, 3],
+  [3, 2, 1],
+  { matchOutOfOrderArrays: false }
+); // false
 ```
 
 #### Changing default matching options
