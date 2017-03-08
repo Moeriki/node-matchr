@@ -14,11 +14,12 @@ const NATIVE_CONSTRUCTORS = [
   { Type: Date, detect: (date) => date instanceof Date },
   { Type: Function, detect: (func) => typeof func === 'function' },
   { Type: Number, detect: (numb) => typeof numb === 'number' },
-  { Type: Object, detect: (obj) => obj !== null
+  { Type: Object,
+    detect: (obj) => obj !== null
     && !Array.isArray(obj)
     && !(obj instanceof Date)
     && !(obj instanceof RegExp)
-    && typeof obj === 'object'
+    && typeof obj === 'object',
   },
   { Type: RegExp, detect: (regexp) => regexp instanceof RegExp },
   { Type: String, detect: (str) => typeof str === 'string' },
@@ -96,7 +97,9 @@ function matchr(value, pattern, options) {
   // If the pattern is a function, execute it
   if (typeof pattern === 'function') {
     // Match native constructors by type
-    const nativeConstructor = NATIVE_CONSTRUCTORS.find((nativeConstructor) => nativeConstructor.Type === pattern);
+    const nativeConstructor = NATIVE_CONSTRUCTORS.find(
+      (constructor) => constructor.Type === pattern
+    );
     if (nativeConstructor) {
       return nativeConstructor.detect(value);
     }

@@ -1,6 +1,8 @@
+coverage
+node_modules
+test/
+.editorconfig
 .eslintrc.js
 .gitignore
 .npmignore
-coverage
-node_modules
-__tests__/
+.travis.yml
