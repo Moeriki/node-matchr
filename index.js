@@ -66,6 +66,9 @@ function matchDate(value, pattern) {
 }
 
 function matchObject(value, pattern, options) {
+  if (typeof pattern === 'string') {
+    return Boolean(value[pattern]);
+  }
   if (value.constructor !== pattern.constructor) {
     return false;
   }
@@ -125,11 +128,6 @@ function matchr(value, pattern, options) {
   // Match Dates
   if (value instanceof Date) {
     return matchDate(value, pattern);
-  }
-
-  // Values of different types never match.
-  if (typeof value !== typeof pattern) {
-    return false;
   }
 
   // Values that are no objects only match if they are identical (see above).

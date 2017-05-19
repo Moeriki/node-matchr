@@ -293,6 +293,10 @@ describe('objects', () => {
       expect(matchr({ a: 1, b: 2 }, { a: 1, b: 2 })).toBe(true);
     });
 
+    it('should match property shorthand', () => {
+      expect(matchr({ active: true }, 'active')).toBe(true);
+    });
+
     it('should match partial properties via default config', () => {
       matchr.setDefaultOptions({ matchPartialObjects: true });
       expect(matchr({ a: 1, b: 2 }, { a: 1 })).toBe(true);
