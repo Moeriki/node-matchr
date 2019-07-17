@@ -25,20 +25,20 @@
     "prepush": "npm test"
   },
   "dependencies": {
-    "pretty-format": "^20.0.3",
+    "pretty-format": "24.8.0",
     "stringify-object": "^3.2.0"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "coveralls": "^2.11.15",
-    "eslint": "^3.17.1",
-    "eslint-config-muriki": "^8.5.0",
-    "eslint-plugin-import": "~2.2.0",
-    "eslint-plugin-jasmine": "~2.2.0",
-    "eslint-plugin-node": "^4.2.0",
-    "husky": "~0.13.1",
-    "jest": "^20.0.3",
-    "lint-staged": "^3.2.7"
+    "chai": "4.2.0",
+    "coveralls": "3.0.5",
+    "eslint": "6.0.1",
+    "eslint-config-muriki": "10.0.1",
+    "eslint-plugin-import": "2.18.0",
+    "eslint-plugin-jasmine": "2.10.1",
+    "eslint-plugin-node": "9.1.0",
+    "husky": "3.0.0",
+    "jest": "24.8.0",
+    "lint-staged": "9.2.0"
   },
   "lint-staged": {
     "*.js": "eslint"
